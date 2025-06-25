@@ -1,0 +1,1 @@
+TypicalTechTools, a web-based application integrating role-based access control to allow admins and users to manage product catalogs and comments securely. This project emphasized secure login functionality, session handling, and encryption to protect user data.
