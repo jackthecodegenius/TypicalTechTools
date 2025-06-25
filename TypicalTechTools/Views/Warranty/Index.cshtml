@@ -1,0 +1,93 @@
+﻿@{
+    var errorMessage = ViewBag.WarrantyErrorMessage ?? "";
+    var fileNames = ViewBag.FileList;
+    bool Authenticated = Context.User.Identity.IsAuthenticated;
+
+
+    bool isRequiredRole = Context.User.IsInRole("USER");
+    bool isAdminRole = Context.User.IsInRole("ADMIN");
+}
+
+<div class="row d-flex justify-content-center">
+
+                      
+
+    <div class="col-8 card p-3">
+        <h2>LODGE WARRANTY CLAIM</h2>
+        <p>
+            If you have any problems with any of your products we are here to help. 
+            To lodge a claim please download the warranty claim form using the following link.
+        </p>
+
+        <a asp-controller="Warranty" asp-action="DownloadClaimForm">Download Claim Form</a>
+       
+        <p>
+            <br>Once downloaded please fill out the form with as much detail as possibly regarding the problem with your product.
+            After completing form please lodge you warranty claim using the section below.
+        </p>
+        <p>
+            <strong>NOTE:</strong> Please do not upload any images at this time. If photographic evidence is required to 
+            support your claim, a customer service representitive will contact you to request any required evidence for the claim.
+        </p>
+    </div>
+                        @if (Authenticated==true){
+
+
+    <div class="col-8 card p-3 mt-4">
+        <form method="post" enctype="multipart/form-data" asp-controller="Warranty" asp-action="FileUpload">
+            <div class="form-group">
+                <div>
+                    <h5>Upload Completed Forms Here</h5>
+                    <input type="file" name="file" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <input type="submit" value="Upload" class="btn btn-info" />
+                </div>
+            </div>
+        </form>
+        @if (String.IsNullOrWhiteSpace(errorMessage) == false)
+        {
+            <h5 class="text-danger">No File Selected!</h5>
+        }
+    </div>
+                        }
+                        @if (Authenticated==true &&isAdminRole)
+                        {
+
+    <div class="col-8 card align-items-center p-3 my-4">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Warranty Files
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in fileNames)
+                {
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            
+
+                                @using (Html.BeginForm("DownloadFile", "Warranty", FormMethod.Post, new { @class = "d-inline" }))
+                                {
+                                    <input type="hidden" name="fileName" value="@item.Name" />
+                                    <button type="submit" class="btn btn-primary ml-1">Download</button>
+                                }
+                            @Html.ActionLink("Delete", "Delete", new { filePath = item.Path }, new {@class="btn btn-danger ml-1"})
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+                        }
+
+</div>

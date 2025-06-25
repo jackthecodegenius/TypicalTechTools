@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Product>
+@{
+    ViewData["Title"] = "Home Page";
+    bool Authenticated = Context.User.Identity.IsAuthenticated;
+    bool isRequiredRole = Context.User.IsInRole("USER");
+    bool isAdminRole = Context.User.IsInRole("ADMIN");
+
+}
+
+<div class="text-center">
+    <h1>Products</h1>
+</div>
+
+<div class="card-container row">
+    @foreach(var product in Model) 
+    {
+        <div class="single-card card shadow m-2 text-center" style="width: 18rem; height:20rem">
+                <h2>@product.ProductName</h2>
+                <h3>$@product.ProductPrice</h3>
+                <p style="height:12rem">@product.ProductDescription</p>
+                <small>Product Code: @product.ProductCode</small>
+            <small>
+                Product Last Update:
+                @if (product.UpdatedDate.HasValue)
+                {
+                    @product.UpdatedDate.Value.ToString("dd MMMM yyyy hh: mm tt")
+                }
+                else
+                {
+                    <span>No update date available</span>
+                }
+            </small>
+                <div>
+                @Html.ActionLink("Comments", "CommentList", "Comment", new { productCode = product.ProductCode }, new { @class = "btn btn-primary m-2" })
+                @if (Authenticated == true && isAdminRole)
+                {
+                @Html.ActionLink("Edit Price", "UpdatePrice", "Product", new { productCode = product.ProductCode }, new { @class = "btn btn-success m-2" })
+                }
+            </div>
+                
+        </div>
+    }
+
+</div>

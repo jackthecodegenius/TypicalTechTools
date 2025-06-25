@@ -1,0 +1,45 @@
+﻿@using System.Security.Claims
+@model TypicalTechTools.Models.Comment
+
+@{
+    ViewData["Title"] = "EditComment";
+    var loggedInUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+}
+
+<h1>Edit Comment</h1>
+
+<h4>Comment</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <!-- Change asp-action to "EditComment" to ensure it's posting to the correct action method -->
+        <form asp-action="EditComment" asp-controller="Comment" method="post" style="display:inline;">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="UserId" value="@loggedInUserId" class="form-control" />
+            <!-- Use HiddenFor to include the commentId and product_code in the form -->
+            @Html.HiddenFor(c => c.commentId)
+            @Html.HiddenFor(c => c.product_code)
+
+            <div class="form-group">
+                <label asp-for="comment_text" class="control-label"></label>
+                <input asp-for="comment_text" class="form-control" />
+                <span asp-validation-for="comment_text" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <!-- Correct the route values to match your parameter names -->
+    @Html.ActionLink("Back to Comments", "CommentList", "Comment", new { productCode = Model.product_code }, new { @class = "btn btn-secondary" })
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

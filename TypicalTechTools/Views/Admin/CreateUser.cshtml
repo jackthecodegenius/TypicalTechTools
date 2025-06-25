@@ -1,0 +1,58 @@
+﻿@model TypicalTechTools.Models.DTOs.CreateUserDTO
+
+@{
+    ViewData["Title"] = "Create User";
+    string errorMessage = ViewBag.CreateUserError ?? "";
+    string confirmationMessage = ViewBag.CreateUserConfirmation ?? "";
+}
+
+
+<h1>Sign Up</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+
+        <form asp-action="CreateUser" asp-controller="Admin" method="post" style="display:inline;">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="Role" type="hidden" value="USER" class="form-control" />
+                <div class="form-group">
+                    <label asp-for="UserName" class="control-label"></label>
+                    <input asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" type="password" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                <label asp-for="PasswordConfirmation" class="control-label">Confirm Password</label>
+                    <input asp-for="PasswordConfirmation"  class="form-control" type="password" />
+                     <span asp-validation-for="PasswordConfirmation" class="text-danger" ></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Sign Up" class="btn btn-primary" />
+                </div>
+            @if (string.IsNullOrWhiteSpace(confirmationMessage) == false)
+            {
+                <div class="alert alert-success">
+                    @confirmationMessage
+                </div>
+            }
+            @if (string.IsNullOrWhiteSpace(errorMessage) == false)
+                {
+                <div class="text-danger">@errorMessage</div>
+                }
+            </form>
+        
+        
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
